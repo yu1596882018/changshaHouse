@@ -1,0 +1,48 @@
+{
+  "name": "node-koa-template",
+  "version": "1.0.0",
+  "description": "搭建一个可复用、以koa为主的服务端开发环境",
+  "main": "src/main.js",
+  "scripts": {
+    "dev": "cross-env NODE_DEV=development PORT=8899 nodemon ./src/main",
+    "prod": "pm2 start ./pm2.json",
+    "prettier": "prettier --ignore-path .gitignore --write ."
+  },
+  "repository": "git@github.com:yu1596882018/node-koa-template.git",
+  "author": "yu1596882018 <1596882018@qq.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "elasticsearch": "^16.5.0",
+    "jsonwebtoken": "^8.5.1",
+    "koa": "^2.7.0",
+    "koa-bodyparser": "^4.2.1",
+    "koa-logger": "^3.2.0",
+    "koa-multer": "^1.0.2",
+    "koa-router": "^7.4.0",
+    "koa-sslify": "^4.0.3",
+    "koa-static": "^5.0.0",
+    "koa2-cors": "^2.0.6",
+    "log4js": "^4.3.1",
+    "moment": "^2.24.0",
+    "mysql2": "^1.6.4",
+    "prettier": "^2.2.1",
+    "redis": "^2.8.0",
+    "sequelize": "^5.21.2",
+    "uuid": "^3.3.3"
+  },
+  "devDependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "cross-env": "^5.2.0",
+    "koa-json": "^2.0.2",
+    "nodemon": "^1.19.1",
+    "request": "^2.88.2"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "scripts/*",
+      "data/*"
+    ],
+    "delay": "2500"
+  }
+}
