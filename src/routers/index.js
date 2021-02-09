@@ -1,5 +1,6 @@
-const demoRouter = require('./demo')
-
+const houseEnterList = require('./houseEnterList')
+const houseInfoList = require('./houseInfoList')
 module.exports = {
-  demoRouter,
+  houseEnterList,
+  houseInfoList,
 }

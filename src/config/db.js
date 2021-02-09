@@ -20,9 +20,9 @@ const mysqlOptions = {
 }
 
 const devMysqlConfig = [
-  'koa_demo', // 数据库名
+  'changsha_house', // 数据库名
   'root', // 用户名
-  '12345', // 密码
+  'xingyun2021.', // 密码
   mysqlOptions,
 ]
 

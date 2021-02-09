@@ -42,4 +42,4 @@
 
 ## 自动建模
 
-sequelize-auto -o "./schema" -d ads -h localhost -u root -p 3306 -x 12345 -t ads_device_imei_ua_1156110000
+sequelize-auto -o "./src/schema" -d changsha_house -h localhost -u root -p 3306 -x xingyun2021. -t test

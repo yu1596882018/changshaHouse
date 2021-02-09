@@ -1,6 +1,6 @@
 const config = require('../config')
 const { mysqlDb } = require('../config/db')
-const modelPath = '../schema/demo'
+const modelPath = '../schema/houseEnterList'
 const CommonApi = require('./common')
 
 let example = null
@@ -9,10 +9,10 @@ if (config.connectMysql) {
   example.sync()
 }
 
-class DemoModel extends CommonApi {
+class HouseEnterListModel extends CommonApi {
   constructor(example) {
     super(example)
   }
 }
 
-module.exports = new DemoModel(example)
+module.exports = new HouseEnterListModel(example)

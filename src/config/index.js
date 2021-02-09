@@ -7,7 +7,7 @@ module.exports = {
   // 默认启动端口
   port: 8899,
   // 是否连接mysql
-  connectMysql: false,
+  connectMysql: true,
   // 是否连接elasticsearch
   connectES: false,
   // 是否连接mysql
