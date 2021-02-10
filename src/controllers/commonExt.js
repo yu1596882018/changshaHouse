@@ -2,9 +2,12 @@
  * 基本增、删、改、查逻辑复用
  * @param exampleModel
  * @param attrNames
+ * @param options
  * @returns {{addCont(*, *): Promise<void>, deleteCont(*, *): Promise<void>, updateCont(*, *): Promise<void>, queryCont(*, *): Promise<void>}}
  */
-module.exports = function (exampleModel, attrNames = []) {
+module.exports = function(exampleModel, attrNames = [], options = {}) {
+  const { modelIsMethod } = options
+
   return {
     async addCont(ctx, next) {
       let options = {}
@@ -16,14 +19,14 @@ module.exports = function (exampleModel, attrNames = []) {
         }
       })
 
-      let result = await exampleModel.create(options)
+      let result = await (modelIsMethod ? exampleModel(ctx.params.tableId) : exampleModel).create(options)
 
       ctx.body = result
       await next()
     },
 
     async deleteCont(ctx, next) {
-      await exampleModel.destroy({
+      await (modelIsMethod ? exampleModel(ctx.params.tableId) : exampleModel).destroy({
         id: ctx.params.id,
       })
 
@@ -41,7 +44,7 @@ module.exports = function (exampleModel, attrNames = []) {
         // }
       })
 
-      await exampleModel.update(options, {
+      await (modelIsMethod ? exampleModel(ctx.params.tableId) : exampleModel).update(options, {
         id: ctx.params.id,
       })
 
@@ -59,7 +62,7 @@ module.exports = function (exampleModel, attrNames = []) {
         }
       })
 
-      await exampleModel.update(options, {
+      await (modelIsMethod ? exampleModel(ctx.params.tableId) : exampleModel).update(options, {
         id: ctx.params.id,
       })
 
@@ -68,7 +71,7 @@ module.exports = function (exampleModel, attrNames = []) {
     },
 
     async queryOneCont(ctx, next) {
-      let result = await exampleModel.findOne({
+      let result = await (modelIsMethod ? exampleModel(ctx.params.tableId) : exampleModel).findOne({
         id: ctx.params.id,
       })
 
@@ -79,6 +82,7 @@ module.exports = function (exampleModel, attrNames = []) {
     async queryAllCont(ctx, next) {
       let options = {}
 
+      console.log(ctx.params)
       attrNames.forEach((attrName) => {
         let val = ctx.query[attrName]
         if (val !== undefined) {
@@ -86,7 +90,7 @@ module.exports = function (exampleModel, attrNames = []) {
         }
       })
 
-      let result = await exampleModel.findAndCountAll(options, +ctx.query.offset || 0, +ctx.query.limit || 10)
+      let result = await (modelIsMethod ? exampleModel(ctx.params.tableId) : exampleModel).findAndCountAll(options, +ctx.query.offset || 0, +ctx.query.limit || 10)
 
       ctx.body = result
       await next()
