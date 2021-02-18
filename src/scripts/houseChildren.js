@@ -3,10 +3,10 @@ const rp = require('request-promise')
 
 const attrNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 
-module.exports = (id) => {
+module.exports = async (id) => {
   const datas = []
 
-  rp('http://222.240.149.21:8081/floorinfo/' + id, {
+  const res = await rp('http://222.240.149.21:8081/floorinfo/' + id, {
     headers: {
       accept:
         'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -22,52 +22,48 @@ module.exports = (id) => {
     method: 'GET',
     mode: 'cors',
   })
-    .then(async (res) => {
-      // console.log('res', res)
-      const $ = cheerio.load(res)
-      const $trs = $('.hs_table > table > tbody > tr:not(.hs_table1)')
-      // console.log('trs', $trs.length)
+  // console.log('res', res)
+  const $ = cheerio.load(res)
+  const $trs = $('.hs_table > table > tbody > tr:not(.hs_table1)')
+  // console.log('trs', $trs.length)
 
-      $trs.each((index, element) => {
-        if (index !== 0) {
-          const $tds = $(element).children('td')
-          const onclickValue = $(element).children('td.hs_zk').attr('onclick')
-          const iMatch = onclickValue && onclickValue.match(/javascript:hsjajx\('(\w+)',\d+\)/)
+  $trs.each((index, element) => {
+    if (index !== 0) {
+      const $tds = $(element).children('td')
+      const onclickValue = $(element).children('td.hs_zk').attr('onclick')
+      const iMatch = onclickValue && onclickValue.match(/javascript:hsjajx\('(\w+)',\d+\)/)
 
-          const data = {
-            i: iMatch ? iMatch[1] : null,
-          }
+      const data = {
+        i: iMatch ? iMatch[1] : null,
+      }
 
-          attrNames.forEach((item, index) => {
-            data[item] = $tds.eq(index).text()
-          })
-          datas.push(data)
-        }
+      attrNames.forEach((item, index) => {
+        data[item] = $tds.eq(index).text()
       })
+      datas.push(data)
+    }
+  })
 
-      // console.log(datas)
-      await rp({
-        method: 'DELETE',
-        url: 'http://localhost:8899/houseChildren/' + id,
-      })
+  // console.log(datas)
+  await rp({
+    method: 'DELETE',
+    url: 'http://localhost:8899/houseChildren/' + id,
+  })
 
-      const result = await rp({
-        method: 'POST',
-        url: 'http://localhost:8899/houseChildren/' + id + '/bulkCreate',
-        headers: {
-          'cache-control': 'no-cache',
-          'content-type': 'application/json',
-        },
-        body: {
-          data: datas,
-        },
-        json: true,
-      })
+  const result = await rp({
+    method: 'POST',
+    url: 'http://localhost:8899/houseChildren/' + id + '/bulkCreate',
+    headers: {
+      'cache-control': 'no-cache',
+      'content-type': 'application/json',
+    },
+    body: {
+      data: datas,
+    },
+    json: true,
+  })
 
-      console.log('success - houseChildren - POST', result)
-    })
-    .catch((err) => {
-      console.log('err', err)
-    })
+  console.log('success - houseChildren - POST', result)
+  return datas
 }
 

@@ -3,10 +3,10 @@ const rp = require('request-promise')
 
 const attrNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
 
-module.exports = (id, tableId) => {
+module.exports = async (id, tableId) => {
   const datas = []
 
-  rp('http://222.240.149.21:8081/hslist', {
+  const res = await rp('http://222.240.149.21:8081/hslist', {
     headers: {
       accept: 'application/json, text/javascript, */*; q=0.01',
       'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8',
@@ -22,45 +22,41 @@ module.exports = (id, tableId) => {
     method: 'POST',
     mode: 'cors',
   })
-    .then(async (res) => {
-      // console.log('res', res)
-      const $ = cheerio.load(`<table>${eval("'" + res + "'")}</table>`)
-      const $trs = $('tr')
-      // console.log('trs', $trs.length)
+  // console.log('res', res)
+  const $ = cheerio.load(`<table>${eval("'" + res + "'")}</table>`)
+  const $trs = $('tr')
+  // console.log('trs', $trs.length)
 
-      $trs.each((index, element) => {
-        if (index !== 0) {
-          const $tds = $(element).children('td')
-          const data = {}
-          attrNames.forEach((item, index) => {
-            data[item] = $tds.eq(index).text()
-          })
-          datas.push(data)
-        }
+  $trs.each((index, element) => {
+    if (index !== 0) {
+      const $tds = $(element).children('td')
+      const data = {}
+      attrNames.forEach((item, index) => {
+        data[item] = $tds.eq(index).text()
       })
+      datas.push(data)
+    }
+  })
 
-      // console.log(datas)
-      await rp({
-        method: 'DELETE',
-        url: 'http://localhost:8899/houseChildrenInfo/' + id + '_' + tableId,
-      })
+  // console.log(datas)
+  await rp({
+    method: 'DELETE',
+    url: 'http://localhost:8899/houseChildrenInfo/' + id + '_' + tableId,
+  })
 
-      const result = await rp({
-        method: 'POST',
-        url: 'http://localhost:8899/houseChildrenInfo/' + id + '_' + tableId + '/bulkCreate',
-        headers: {
-          'cache-control': 'no-cache',
-          'content-type': 'application/json',
-        },
-        body: {
-          data: datas,
-        },
-        json: true,
-      })
+  const result = await rp({
+    method: 'POST',
+    url: 'http://localhost:8899/houseChildrenInfo/' + id + '_' + tableId + '/bulkCreate',
+    headers: {
+      'cache-control': 'no-cache',
+      'content-type': 'application/json',
+    },
+    body: {
+      data: datas,
+    },
+    json: true,
+  })
 
-      console.log('success - houseChildrenInfo - POST', result)
-    })
-    .catch((err) => {
-      console.log('err', err)
-    })
+  console.log('success - houseChildrenInfo - POST', result)
+  return datas
 }

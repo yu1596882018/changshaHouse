@@ -29,12 +29,12 @@ const rightCol = attrNames.slice(10, attrNames.length - 1)
 const lastCol = attrNames.slice(attrNames.length - 1)
 // console.log(leftCol, rightCol, lastCol)
 
-module.exports = (id) => {
+module.exports = async (id) => {
   const data = {
     v: id,
   }
 
-  rp(`http://222.240.149.21:8081/floorinfo/${id}`, {
+  const res = await rp(`http://222.240.149.21:8081/floorinfo/${id}`, {
     headers: {
       accept:
         'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
@@ -50,69 +50,66 @@ module.exports = (id) => {
     method: 'GET',
     mode: 'cors',
   })
-    .then(async (res) => {
-      // console.log('res', res)
-      const $ = cheerio.load(res)
-      const $trs = $('.hs_xqxx table tr')
-      // console.log('trs', $trs.length)
+  // console.log('res', res)
+  const $ = cheerio.load(res)
+  const $trs = $('.hs_xqxx table tr')
+  // console.log('trs', $trs.length)
 
-      leftCol.forEach((item, index) => {
-        data[item] = $trs
-          .eq(index + 1)
-          .children('td')
-          .eq(1)
-          .text()
-      })
+  leftCol.forEach((item, index) => {
+    data[item] = $trs
+      .eq(index + 1)
+      .children('td')
+      .eq(1)
+      .text()
+  })
 
-      rightCol.forEach((item, index) => {
-        data[item] = $trs
-          .eq(index + 1)
-          .children('td')
-          .eq(3)
-          .text()
-      })
+  rightCol.forEach((item, index) => {
+    data[item] = $trs
+      .eq(index + 1)
+      .children('td')
+      .eq(3)
+      .text()
+  })
 
-      data[lastCol[0]] = $trs
-        .eq($trs.length - 1)
-        .children('td')
-        .eq(1)
-        .text()
+  data[lastCol[0]] = $trs
+    .eq($trs.length - 1)
+    .children('td')
+    .eq(1)
+    .text()
 
-      // console.log(data)
+  // console.log(data)
 
-      const oldData = await rp('http://localhost:8899/houseInfoList?v=' + id, {
-        json: true,
-      })
+  const oldData = await rp('http://localhost:8899/houseInfoList?v=' + id, {
+    json: true,
+  })
 
-      if (oldData.count > 0) {
-        const result = await rp({
-          method: 'PUT',
-          url: 'http://localhost:8899/houseInfoList/' + oldData.rows[0].id,
-          headers: {
-            'cache-control': 'no-cache',
-            'content-type': 'application/json',
-          },
-          body: data,
-          json: true,
-        })
-
-        console.log('success - houseInfoList - PUT', result)
-      } else {
-        const result = await rp({
-          method: 'POST',
-          url: 'http://localhost:8899/houseInfoList',
-          headers: {
-            'cache-control': 'no-cache',
-            'content-type': 'application/json',
-          },
-          body: data,
-          json: true,
-        })
-
-        console.log('success - houseInfoList - POST', result)
-      }
+  if (oldData.count > 0) {
+    const result = await rp({
+      method: 'PUT',
+      url: 'http://localhost:8899/houseInfoList/' + oldData.rows[0].id,
+      headers: {
+        'cache-control': 'no-cache',
+        'content-type': 'application/json',
+      },
+      body: data,
+      json: true,
     })
-    .catch((err) => {
-      console.log('err', err)
+
+    console.log('success - houseInfoList - PUT', result)
+  } else {
+    const result = await rp({
+      method: 'POST',
+      url: 'http://localhost:8899/houseInfoList',
+      headers: {
+        'cache-control': 'no-cache',
+        'content-type': 'application/json',
+      },
+      body: data,
+      json: true,
     })
+
+    console.log('success - houseInfoList - POST', result)
+  }
+
+  return data
 }
