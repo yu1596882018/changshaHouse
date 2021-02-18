@@ -31,9 +31,11 @@ module.exports = (id) => {
       $trs.each((index, element) => {
         if (index !== 0) {
           const $tds = $(element).children('td')
+          const onclickValue = $(element).children('td.hs_zk').attr('onclick')
+          const iMatch = onclickValue && onclickValue.match(/javascript:hsjajx\('(\w+)',\d+\)/)
 
           const data = {
-            i: id + '_' + $tds.eq(1).text(),
+            i: iMatch ? iMatch[1] : null,
           }
 
           attrNames.forEach((item, index) => {
@@ -68,3 +70,4 @@ module.exports = (id) => {
       console.log('err', err)
     })
 }
+

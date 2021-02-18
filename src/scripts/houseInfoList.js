@@ -32,7 +32,6 @@ const lastCol = attrNames.slice(attrNames.length - 1)
 module.exports = (id) => {
   const data = {
     v: id,
-    w: id,
   }
 
   rp(`http://222.240.149.21:8081/floorinfo/${id}`, {
