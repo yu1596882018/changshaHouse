@@ -1,10 +1,10 @@
 const sequelize = require('sequelize')
-const houseChildrenSchema = require('./../schema/houseChildren')
+const houseChildrenInfoSchema = require('./../schema/houseChildrenInfo')
 const config = require('../config')
 const { mysqlDb } = require('../config/db')
 const CommonApi = require('./common')
 
-class HouseChildrenModel extends CommonApi {
+class houseChildrenInfoModel extends CommonApi {
   constructor(example) {
     super(example)
   }
@@ -16,12 +16,12 @@ const modelList = {}
 module.exports = (tableId) => {
   let example = exampleList[tableId]
   if (config.connectMysql && !example) {
-    example = exampleList[tableId] = houseChildrenSchema(mysqlDb, sequelize.DataTypes, { tableId })
+    example = exampleList[tableId] = houseChildrenInfoSchema(mysqlDb, sequelize.DataTypes, { tableId })
     example.sync()
   }
 
   if (!modelList[tableId]) {
-    return (modelList[tableId] = new HouseChildrenModel(example))
+    return (modelList[tableId] = new houseChildrenInfoModel(example))
   } else {
     return modelList[tableId]
   }
