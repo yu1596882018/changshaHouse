@@ -16,13 +16,10 @@ class Common {
   /**
    * 批量增
    * @param dataArray
-   * @param updateOnDuplicate
    * @returns {Promise<*>}
    */
-  async bulkCreate(dataArray, updateOnDuplicate = true) {
-    const result = await this.example.bulkCreate(dataArray, {
-      updateOnDuplicate,
-    })
+  async bulkCreate(dataArray) {
+    const result = await this.example.bulkCreate(dataArray)
     return result
   }
 
