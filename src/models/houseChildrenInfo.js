@@ -13,11 +13,11 @@ class houseChildrenInfoModel extends CommonApi {
 const exampleList = {}
 const modelList = {}
 
-module.exports = (tableId) => {
+module.exports = async (tableId) => {
   let example = exampleList[tableId]
   if (config.connectMysql && !example) {
     example = exampleList[tableId] = houseChildrenInfoSchema(mysqlDb, sequelize.DataTypes, { tableId })
-    example.sync()
+    await example.sync()
   }
 
   if (!modelList[tableId]) {

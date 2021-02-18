@@ -19,14 +19,14 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
         }
       })
 
-      let result = await (modelIsMethod ? exampleModel(ctx.params.tableId) : exampleModel).create(options)
+      let result = await (modelIsMethod ? (await exampleModel(ctx.params.tableId)) : exampleModel).create(options)
 
       ctx.body = result
       await next()
     },
 
     async deleteCont(ctx, next) {
-      await (modelIsMethod ? exampleModel(ctx.params.tableId) : exampleModel).destroy({
+      await (modelIsMethod ? (await exampleModel(ctx.params.tableId)) : exampleModel).destroy({
         id: ctx.params.id,
       })
 
@@ -44,7 +44,7 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
         // }
       })
 
-      await (modelIsMethod ? exampleModel(ctx.params.tableId) : exampleModel).update(options, {
+      await (modelIsMethod ? (await exampleModel(ctx.params.tableId)) : exampleModel).update(options, {
         id: ctx.params.id,
       })
 
@@ -62,7 +62,7 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
         }
       })
 
-      await (modelIsMethod ? exampleModel(ctx.params.tableId) : exampleModel).update(options, {
+      await (modelIsMethod ? (await exampleModel(ctx.params.tableId)) : exampleModel).update(options, {
         id: ctx.params.id,
       })
 
@@ -71,7 +71,7 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
     },
 
     async queryOneCont(ctx, next) {
-      let result = await (modelIsMethod ? exampleModel(ctx.params.tableId) : exampleModel).findOne({
+      let result = await (modelIsMethod ? (await exampleModel(ctx.params.tableId)) : exampleModel).findOne({
         id: ctx.params.id,
       })
 
@@ -90,7 +90,7 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
         }
       })
 
-      let result = await (modelIsMethod ? exampleModel(ctx.params.tableId) : exampleModel).findAndCountAll(options, +ctx.query.offset || 0, +ctx.query.limit || 10)
+      let result = await (modelIsMethod ? (await exampleModel(ctx.params.tableId)) : exampleModel).findAndCountAll(options, +ctx.query.offset || 0, +ctx.query.limit || 10)
 
       ctx.body = result
       await next()
