@@ -26,11 +26,13 @@ class Common {
   /**
    * 删
    * @param where
+   * @param options
    * @returns {Promise<void>}
    */
-  async destroy(where) {
+  async destroy(where, options) {
     const result = await this.example.destroy({
       where,
+      ...options,
     })
     return result
   }

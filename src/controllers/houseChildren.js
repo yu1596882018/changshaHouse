@@ -1,6 +1,24 @@
 const houseChildrenModel = require('../models/houseChildren')
 const commonExt = require('./commonExt')
 
+const attrNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
+
 module.exports = {
-  ...commonExt(houseChildrenModel, ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'], { modelIsMethod: true }),
+  ...commonExt(houseChildrenModel, attrNames, { modelIsMethod: true }),
+
+  async bulkCreate(ctx, next) {
+    let result = await houseChildrenModel(ctx.params.tableId).bulkCreate(ctx.request.body.data || [])
+
+    ctx.body = result
+    await next()
+  },
+
+  async destroyAll(ctx, next) {
+    await houseChildrenModel(ctx.params.tableId).destroy({}, {
+      truncate: true,
+    })
+
+    ctx.body = 'success'
+    await next()
+  },
 }
