@@ -5,7 +5,7 @@ const houseMain = require('./../scripts/houseMain')
 module.exports = {
   getCodeImg: async (ctx, next) => {
     ctx.set('Content-Type', 'image/png')
-    const imgRes = await rp('http://www.cszjxx.net/newCaptcha?r=0.06862258436116475', {
+    const imgRes = await rp('http://www.cszjxx.net/newCaptcha?r=' + Math.random(), {
       headers: {
         accept: 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8',
         'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8',
