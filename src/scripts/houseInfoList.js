@@ -54,7 +54,7 @@ module.exports = async (id) => {
   const $ = cheerio.load(res)
   const $trs = $('.hs_xqxx table tr')
   // console.log('trs', $trs.length)
-
+  data.w = $trs.eq(0).children('td').text()
   leftCol.forEach((item, index) => {
     data[item] = $trs
       .eq(index + 1)

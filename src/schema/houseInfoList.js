@@ -118,6 +118,11 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: true,
         comment: '小区id',
       },
+      w: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        comment: '小区名称',
+      },
     },
     {
       sequelize,

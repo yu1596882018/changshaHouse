@@ -25,5 +25,6 @@ module.exports = {
     't',
     'u',
     'v',
+    'w',
   ]),
 }
