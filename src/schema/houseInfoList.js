@@ -109,7 +109,7 @@ module.exports = function (sequelize, DataTypes) {
         comment: '竣工时间',
       },
       u: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.STRING(65535),
         allowNull: true,
         comment: '项目简介',
       },
