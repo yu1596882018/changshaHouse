@@ -83,6 +83,6 @@ module.exports = async (id, tableId) => {
     json: true,
   })
 
-  console.log('success - houseChildrenInfo - POST', result)
+  // console.log('success - houseChildrenInfo - POST', result)
   return datas
 }

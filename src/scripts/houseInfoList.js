@@ -95,7 +95,7 @@ module.exports = async (id) => {
       json: true,
     })
 
-    console.log('success - houseInfoList - PUT', result)
+    // console.log('success - houseInfoList - PUT', result)
   } else {
     const result = await rp({
       method: 'POST',
@@ -108,7 +108,7 @@ module.exports = async (id) => {
       json: true,
     })
 
-    console.log('success - houseInfoList - POST', result)
+    // console.log('success - houseInfoList - POST', result)
   }
 
   return data

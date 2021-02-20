@@ -63,7 +63,7 @@ module.exports = async (id) => {
     json: true,
   })
 
-  console.log('success - houseChildren - POST', result)
+  // console.log('success - houseChildren - POST', result)
   return datas
 }
 
