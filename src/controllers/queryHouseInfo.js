@@ -55,8 +55,6 @@ module.exports = {
       jar: true,
     })
 
-    ctx.body = result
-
     if (result.status === '1') {
       const $ = cheerio.load(eval("'" + result.content + "'"))
       const $a = $('a')
@@ -64,7 +62,15 @@ module.exports = {
       const iMatch = hrefValue && hrefValue.match(/\S+floorinfo\/(\w+)/)
 
       const id = iMatch ? iMatch[1] : null
-      houseMain(id)
+      result.id = id
     }
+
+    ctx.body = result
+  },
+
+  async collectHouseInfo(ctx, next) {
+    await houseMain(ctx.query.id)
+
+    ctx.body = 'success'
   },
 }

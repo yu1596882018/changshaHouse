@@ -6,4 +6,6 @@ queryHouseInfoRouter.get('/getCodeImg', queryHouseInfoCont.getCodeImg)
 
 queryHouseInfoRouter.post('/verifyCode', queryHouseInfoCont.verifyCode)
 
+queryHouseInfoRouter.get('/collectHouseInfo', queryHouseInfoCont.collectHouseInfo)
+
 module.exports = queryHouseInfoRouter
