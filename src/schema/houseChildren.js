@@ -54,6 +54,21 @@ module.exports = function (sequelize, DataTypes, extendOptions = {}) {
         allowNull: true,
         comment: '楼栋每户信息表id',
       },
+      j: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        comment: '总户数',
+      },
+      k: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        comment: '已售',
+      },
+      l: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        comment: '可售',
+      },
     },
     {
       sequelize,

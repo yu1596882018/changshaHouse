@@ -57,6 +57,32 @@ module.exports = async (id, tableId) => {
     json: true,
   })
 
+  const data = {
+    j: datas.length,
+    k: datas.filter((item) => item.i === '已售').length,
+    l: datas.filter((item) => item.i === '可售').length,
+  }
+
+  const houseChildrenRes = await rp({
+    url: 'http://localhost:8899/houseChildren/' + id + '?i=' + tableId,
+    headers: {
+      'cache-control': 'no-cache',
+      'content-type': 'application/json',
+    },
+    json: true,
+  })
+
+  await rp({
+    method: 'patch',
+    url: 'http://localhost:8899/houseChildren/' + id + '/' + houseChildrenRes.rows[0].id,
+    headers: {
+      'cache-control': 'no-cache',
+      'content-type': 'application/json',
+    },
+    body: data,
+    json: true,
+  })
+
   console.log('success - houseChildrenInfo - POST', result)
   return datas
 }

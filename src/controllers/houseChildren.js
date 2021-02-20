@@ -1,7 +1,7 @@
 const houseChildrenModel = require('../models/houseChildren')
 const commonExt = require('./commonExt')
 
-const attrNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
+const attrNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']
 
 module.exports = {
   ...commonExt(houseChildrenModel, attrNames, { modelIsMethod: true }),
