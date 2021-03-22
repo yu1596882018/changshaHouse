@@ -19,7 +19,7 @@ module.exports = function(sequelize, DataTypes) {
         comment: '用户名称',
       },
       c: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.STRING(10000),
         allowNull: true,
         comment: '用户信息',
       },
