@@ -3,6 +3,7 @@ const houseInfoList = require('./houseInfoList')
 const houseChildrenRouter = require('./houseChildren')
 const houseChildrenInfoRouter = require('./houseChildrenInfo')
 const queryHouseInfoRouter = require('./queryHouseInfo')
+const tempRouter = require('./temp')
 
 module.exports = {
   houseEnterList,
@@ -10,4 +11,5 @@ module.exports = {
   houseChildrenRouter,
   houseChildrenInfoRouter,
   queryHouseInfoRouter,
+  tempRouter,
 }
