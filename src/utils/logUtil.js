@@ -1,4 +1,5 @@
 const log4js = require('log4js')
+const uuidv1 = require('uuid/v1')
 const logConfig = require('../config/logConfig')
 const isProdu = process.env.NODE_DEV === 'production'
 
@@ -11,16 +12,33 @@ const mysqlLogger = log4js.getLogger('mysqlLogger')
 const debugLogger = log4js.getLogger('DebugLogger')
 
 //封装错误日志
-logUtil.logError = function (ctx, error, resTime) {
+logUtil.logError = function (ctx, error, resTime, esClient) {
   if (ctx && error) {
-    errorLogger.error(formatError(ctx, error, resTime))
+    const errLog = formatError(ctx, error, resTime)
+
+    esClient && esClient.create({
+      index: 'server_err_logs',
+      type: '_doc',
+      id: uuidv1(),
+      body: errLog.logObj,
+    })
+
+    errorLogger.error(errLog.logText)
   }
 }
 
 //封装响应日志
-logUtil.logResponse = function (ctx, resTime) {
+logUtil.logResponse = function (ctx, resTime, esClient) {
   if (ctx) {
-    resLogger.info(formatRes(ctx, resTime))
+    const resLog = formatRes(ctx, resTime)
+    resLogger.info(resLog.logText)
+
+    esClient && esClient.create({
+      index: 'server_res_logs',
+      type: '_doc',
+      id: uuidv1(),
+      body: resLog.logObj,
+    })
   }
 }
 
@@ -41,85 +59,107 @@ logUtil.debugLog = function (text, file_name) {
 //格式化响应日志
 var formatRes = function (ctx, resTime) {
   var logText = new String()
+  var logObj = {}
 
-  var data = {}
   //响应日志开始
   logText += '\n' + '*************** response log start ***************' + '\n'
 
   //添加请求日志
-  logText += formatReqLog(ctx, resTime)
+  const reqLog = formatReqLog(ctx, resTime, logObj)
+  logText += reqLog.logText
 
   //响应状态码
   logText += 'response status: ' + ctx.status + '\n'
+  logObj.responseStatus = ctx.status
 
   //响应内容
   logText += 'response body: ' + '\n' + JSON.stringify(ctx.body) + '\n'
+  logObj.responseBody = JSON.stringify(ctx.body)
 
   //响应日志结束
   logText += '*************** response log end ***************' + '\n'
 
-  return logText
+  return {
+    logText,
+    logObj,
+  }
 }
 
 //格式化错误日志
 var formatError = function (ctx, err, resTime) {
   var logText = new String()
+  var logObj = {}
 
   //错误信息开始
   logText += '\n' + '*************** error log start ***************' + '\n'
 
   //添加请求日志
-  logText += formatReqLog(ctx, resTime)
+  const reqLog = formatReqLog(ctx, resTime, logObj)
+  logText += reqLog.logText
 
   //错误名称
   logText += 'err name: ' + err.name + '\n'
+  logObj.errName = err.name
   //错误信息
   logText += 'err message: ' + err.message + '\n'
+  logObj.errMessage = err.message
   //错误详情
   logText += 'err stack: ' + err.stack + '\n'
+  logObj.errStack = err.stack
 
   //错误信息结束
   logText += '*************** error log end ***************' + '\n'
 
-  return logText
+  return {
+    logText,
+    logObj,
+  }
 }
 
 //格式化请求日志
-var formatReqLog = function (ctx, resTime) {
+var formatReqLog = function (ctx, resTime, logObj = {}) {
   var req = ctx.request
   var logText = new String()
 
   var method = req.method
   //访问方法
   logText += 'request method: ' + method + '\n'
+  logObj.requestMethod = method
 
   //请求原始地址
   logText += 'request originalUrl:  ' + req.originalUrl + '\n'
+  logObj.requestOriginalUrl = req.originalUrl
 
   //客户端ip
   logText += 'request client ip:  ' + req.ip + '\n'
+  logObj.requestClientIp = req.ip
 
-  //开始时间
-  var startTime
   //请求参数
   if (method === 'GET') {
     logText += 'request query:  ' + JSON.stringify(req.query) + '\n'
-    // startTime = req.query.requestStartTime;
+    logObj.requestQuery = JSON.stringify(req.query)
   } else {
     logText += 'request body: ' + '\n' + JSON.stringify(req.body) + '\n'
-    // startTime = req.body.requestStartTime;
+    logObj.requestBody = JSON.stringify(req.body)
   }
 
   //请求token
   logText += 'request token: \n' + ctx.request.headers.token + '\n'
+  logObj.requestToken = ctx.request.headers.token
 
   //请求签名
   logText += 'request sign: ' + ctx.request.headers.sign + '\n'
+  logObj.requestSign = ctx.request.headers.sign
 
   //服务器响应时间
   logText += 'response time: ' + resTime + '\n'
+  logObj.requestTime = resTime
+  logObj.timestamp = new Date()
 
-  return logText
+  return {
+    logText,
+    logObj,
+  }
 }
 
 module.exports = logUtil

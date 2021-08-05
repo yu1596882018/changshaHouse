@@ -9,7 +9,7 @@ module.exports = {
   // 是否连接mysql
   connectMysql: true,
   // 是否连接elasticsearch
-  connectES: false,
-  // 是否连接mysql
+  connectES: true,
+  // 是否连接redis
   connectRedis: false,
 }

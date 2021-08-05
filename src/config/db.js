@@ -39,8 +39,8 @@ if (config.connectRedis) {
 let esClient = null
 if (config.connectES) {
   esClient = new elasticsearch.Client({
-    host: 'http://172.18.138.7:9200',
-    apiVersion: '6.8',
+    host: 'http://localhost:9200',
+    apiVersion: '7.2',
   })
 }
 

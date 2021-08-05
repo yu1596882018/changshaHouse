@@ -8,6 +8,7 @@ const cors = require('koa2-cors')
 const routers = require('./routers')
 const { logUtil } = require('./utils')
 const config = require('./config')
+const { esClient } = require('./config/db')
 const responseFormatter = require('./middlewares/responseFormatter')
 
 const App = new Koa()
@@ -18,9 +19,9 @@ App.use(async (ctx, next) => {
   try {
     await next()
 
-    logUtil.logResponse(ctx, Date.now() - startTime)
+    logUtil.logResponse(ctx, Date.now() - startTime, esClient)
   } catch (error) {
-    logUtil.logError(ctx, error, Date.now() - startTime)
+    logUtil.logError(ctx, error, Date.now() - startTime, esClient)
   }
 })
 
