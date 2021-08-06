@@ -6,7 +6,7 @@ const elasticsearch = require('elasticsearch')
 const config = require('./index')
 const { logUtil } = require('../utils')
 
-const isProd = process.env.NODE_DEV === 'production'
+const isProd = process.env.NODE_ENV === 'production'
 
 const mysqlOptions = {
   host: 'localhost', // 数据库地址
@@ -26,7 +26,7 @@ const devMysqlConfig = [
   mysqlOptions,
 ]
 
-const prodMysqlConfig = []
+const prodMysqlConfig = [...devMysqlConfig]
 const mysqlConfig = isProd ? prodMysqlConfig : devMysqlConfig
 
 const mysqlDb = new Sequelize(...mysqlConfig)

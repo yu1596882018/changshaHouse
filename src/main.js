@@ -7,14 +7,14 @@ const App = require('./app')
 const utils = require('./utils')
 const config = require('./config')
 const Port = process.env.port || config.port
-const NODE_DEV = process.env.NODE_DEV || 'development'
+const NODE_ENV = process.env.NODE_ENV || 'development'
 
 Http.createServer(App.callback()).listen(Port, () => {
   console.log(`服务器开启成功：http://localhost:${Port}`)
   console.log(`服务器开启成功：http://${utils.getIPAdress()}:${Port}`)
 })
 
-if (NODE_DEV === 'development' && config.openHttps) {
+if (NODE_ENV === 'development' && config.openHttps) {
   App.use(
     enforceHttps({
       port: 8081,
