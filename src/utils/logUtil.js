@@ -129,6 +129,10 @@ var formatReqLog = function (ctx, resTime, logObj = {}) {
   logText += 'request method: ' + method + '\n'
   logObj.requestMethod = method
 
+  //请求host
+  logText += 'request host:  ' + ctx.host + '\n'
+  logObj.requestHost = ctx.host
+
   //请求原始地址
   logText += 'request originalUrl:  ' + req.originalUrl + '\n'
   logObj.requestOriginalUrl = req.originalUrl
