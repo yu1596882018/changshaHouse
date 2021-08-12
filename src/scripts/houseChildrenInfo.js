@@ -1,7 +1,7 @@
 const cheerio = require('cheerio')
 const rp = require('request-promise')
 
-const attrNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i']
+const attrNames = ['a', 'b', 'c', 'd', 'f', 'g', 'h', 'i']
 
 module.exports = async (id, tableId) => {
   const datas = []
