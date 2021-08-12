@@ -21,6 +21,7 @@ module.exports = async (id, tableId) => {
     body: `ywzh=${tableId}&n=1`,
     method: 'POST',
     mode: 'cors',
+    timeout: 3000,
   })
   // console.log('res', res)
   const $ = cheerio.load(`<table>${eval("'" + res + "'")}</table>`)
