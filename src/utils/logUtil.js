@@ -59,6 +59,52 @@ logUtil.debugLog = function (text, file_name) {
   debugLogger.info(`${file_name}: >>>>> ${text}`)
 }
 
+logUtil.webNetworkSpeed = function (ctx, esClient) {
+  const reqBody = ctx.request.body
+  const reportBody = {}
+  neatenWebReportBody(reqBody, reportBody)
+  reportBody.networkSpeed = reqBody.logInfo.networkSpeed
+  reportBody.pageId = reqBody.logInfo.pageId
+
+  esClient &&
+    esClient.create({
+      index: 'web_network_speed_logs',
+      type: '_doc',
+      id: uuidv1(),
+      body: reportBody,
+    })
+}
+
+logUtil.webError = function (ctx, esClient) {
+  const reqBody = ctx.request.body
+  const reportBody = {}
+  neatenWebReportBody(reqBody, reportBody)
+  reportBody.errorInfo = reqBody.logInfo
+
+  esClient &&
+    esClient.create({
+      index: 'web_err_logs',
+      type: '_doc',
+      id: uuidv1(),
+      body: reportBody,
+    })
+}
+
+logUtil.webPerformance = function (ctx, esClient) {
+  const reqBody = ctx.request.body
+  const reportBody = {}
+  neatenWebReportBody(reqBody, reportBody)
+  Object.assign(reportBody, reqBody.logInfo)
+
+  esClient &&
+    esClient.create({
+      index: 'web_performance_logs',
+      type: '_doc',
+      id: uuidv1(),
+      body: reportBody,
+    })
+}
+
 //格式化响应日志
 var formatRes = function (ctx, resTime) {
   var logText = new String()
@@ -139,7 +185,7 @@ var formatReqLog = function (ctx, resTime, logObj = {}) {
 
   //请求命中路由
   logText += 'request matchedRoute:  ' + (ctx._matchedRoute || null) + '\n'
-  logObj.requestMatchedRoute = (ctx._matchedRoute || null)
+  logObj.requestMatchedRoute = ctx._matchedRoute || null
 
   //客户端ip
   logText += 'request client ip:  ' + req.ip + '\n'
@@ -180,6 +226,15 @@ var formatReqLog = function (ctx, resTime, logObj = {}) {
     logText,
     logObj,
   }
+}
+
+function neatenWebReportBody(reqBody, reportBody) {
+  reportBody.category = reqBody.category
+  reportBody.logType = reqBody.logType
+  Object.assign(reportBody, reqBody.deviceInfo || {})
+  var agent = useragent.parse(reqBody.deviceInfo.userAgent)
+  reportBody.browser = agent.family
+  reportBody.browserVersion = agent.toVersion()
 }
 
 module.exports = logUtil
