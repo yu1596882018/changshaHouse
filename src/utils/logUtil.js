@@ -235,6 +235,7 @@ function neatenWebReportBody(reqBody, reportBody) {
   var agent = useragent.parse(reqBody.deviceInfo.userAgent)
   reportBody.browser = agent.family
   reportBody.browserVersion = agent.toVersion()
+  reportBody.timestamp = new Date()
 }
 
 module.exports = logUtil
