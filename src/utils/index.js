@@ -1,17 +1,7 @@
 const logUtil = require('./logUtil')
 
-const getUserIp = (req) => {
-  return (
-    req.headers['x-forwarded-for'] ||
-    req.connection.remoteAddress ||
-    req.socket.remoteAddress ||
-    req.connection.socket.remoteAddress
-  )
-}
-
 module.exports = {
   logUtil,
-  getUserIp,
   getIPAdress() {
     // 获取本机主机名和ip
     var interfaces = require('os').networkInterfaces()

@@ -2,10 +2,19 @@ const log4js = require('log4js')
 const useragent = require('useragent')
 const uuidv1 = require('uuid/v1')
 const logConfig = require('../config/logConfig')
-const { getUserIp } = require('./index')
 const isProdu = process.env.NODE_ENV === 'production'
 
 log4js.configure(logConfig)
+
+const getUserIp = (req) => {
+  return (
+    req.headers['x-forwarded-for'] ||
+    (req.connection && req.connection.remoteAddress) ||
+    (req.socket && req.socket.remoteAddress) ||
+    (req.connection && req.connection.socket.remoteAddress) ||
+    req.ip
+  )
+}
 
 const logUtil = {}
 const errorLogger = log4js.getLogger('errorLogger')
