@@ -2,6 +2,7 @@ const log4js = require('log4js')
 const useragent = require('useragent')
 const uuidv1 = require('uuid/v1')
 const logConfig = require('../config/logConfig')
+const { getUserIp } = require('./index')
 const isProdu = process.env.NODE_ENV === 'production'
 
 log4js.configure(logConfig)
@@ -188,8 +189,8 @@ var formatReqLog = function (ctx, resTime, logObj = {}) {
   logObj.requestMatchedRoute = ctx._matchedRoute || null
 
   //客户端ip
-  logText += 'request client ip:  ' + req.ip + '\n'
-  logObj.requestClientIp = req.ip
+  logText += 'request client ip:  ' + getUserIp(req) + '\n'
+  logObj.requestClientIp = getUserIp(req)
 
   //请求参数
   logText += 'request params:  ' + JSON.stringify(ctx.params) + '\n'
