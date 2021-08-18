@@ -72,7 +72,7 @@ logUtil.debugLog = function (text, file_name) {
 logUtil.webNetworkSpeed = function (ctx, esClient) {
   const reqBody = ctx.request.body
   const reportBody = {}
-  neatenWebReportBody(reqBody, reportBody)
+  neatenWebReportBody(reqBody, reportBody, ctx.request)
   reportBody.networkSpeed = reqBody.logInfo.networkSpeed
   reportBody.pageId = reqBody.logInfo.pageId
 
@@ -88,7 +88,7 @@ logUtil.webNetworkSpeed = function (ctx, esClient) {
 logUtil.webError = function (ctx, esClient) {
   const reqBody = ctx.request.body
   const reportBody = {}
-  neatenWebReportBody(reqBody, reportBody)
+  neatenWebReportBody(reqBody, reportBody, ctx.request)
   reportBody.errorInfo = reqBody.logInfo
 
   esClient &&
@@ -103,7 +103,7 @@ logUtil.webError = function (ctx, esClient) {
 logUtil.webPerformance = function (ctx, esClient) {
   const reqBody = ctx.request.body
   const reportBody = {}
-  neatenWebReportBody(reqBody, reportBody)
+  neatenWebReportBody(reqBody, reportBody, ctx.request)
   Object.assign(reportBody, reqBody.logInfo)
 
   esClient &&
@@ -199,7 +199,7 @@ var formatReqLog = function (ctx, resTime, logObj = {}) {
 
   //客户端ip
   logText += 'request client ip:  ' + getUserIp(req) + '\n'
-  logObj.requestClientIp = getUserIp(req)
+  logObj.ip = getUserIp(req)
 
   //请求参数
   logText += 'request params:  ' + JSON.stringify(ctx.params) + '\n'
@@ -238,7 +238,7 @@ var formatReqLog = function (ctx, resTime, logObj = {}) {
   }
 }
 
-function neatenWebReportBody(reqBody, reportBody) {
+function neatenWebReportBody(reqBody, reportBody, req) {
   reportBody.category = reqBody.category
   reportBody.logType = reqBody.logType
   Object.assign(reportBody, reqBody.deviceInfo || {})
@@ -246,6 +246,7 @@ function neatenWebReportBody(reqBody, reportBody) {
   reportBody.browser = agent.family
   reportBody.browserVersion = agent.toVersion()
   reportBody.timestamp = new Date()
+  reportBody.ip = getUserIp(req)
 }
 
 module.exports = logUtil
