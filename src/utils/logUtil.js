@@ -194,7 +194,7 @@ var formatReqLog = function (ctx, resTime, logObj = {}) {
   logObj.requestOriginalUrl = req.originalUrl
 
   //请求命中路由
-  logText += 'request matchedRoute:  ' + (ctx._matchedRoute || null) + '\n'
+  logText += 'request matchedRoute:  ' + (ctx._matchedRoute || 'null') + '\n'
   logObj.requestMatchedRoute = ctx._matchedRoute || null
 
   //客户端ip
