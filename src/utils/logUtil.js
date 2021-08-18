@@ -32,6 +32,7 @@ logUtil.logError = function (ctx, error, resTime, esClient) {
         index: 'server_err_logs',
         type: '_doc',
         id: uuidv1(),
+        pipeline: 'geoip',
         body: errLog.logObj,
       })
 
@@ -50,6 +51,7 @@ logUtil.logResponse = function (ctx, resTime, esClient) {
         index: 'server_res_logs',
         type: '_doc',
         id: uuidv1(),
+        pipeline: 'geoip',
         body: resLog.logObj,
       })
   }
@@ -81,6 +83,7 @@ logUtil.webNetworkSpeed = function (ctx, esClient) {
       index: 'web_network_speed_logs',
       type: '_doc',
       id: uuidv1(),
+      pipeline: 'geoip',
       body: reportBody,
     })
 }
@@ -96,6 +99,7 @@ logUtil.webError = function (ctx, esClient) {
       index: 'web_err_logs',
       type: '_doc',
       id: uuidv1(),
+      pipeline: 'geoip',
       body: reportBody,
     })
 }
@@ -111,6 +115,7 @@ logUtil.webPerformance = function (ctx, esClient) {
       index: 'web_performance_logs',
       type: '_doc',
       id: uuidv1(),
+      pipeline: 'geoip',
       body: reportBody,
     })
 }
