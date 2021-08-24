@@ -1,5 +1,5 @@
 const config = require('../config')
-const { mysqlDb } = require('../config/db')
+const mysqlDb = require('../db/mysql')
 const modelPath = '../schema/temp'
 const CommonApi = require('./common')
 

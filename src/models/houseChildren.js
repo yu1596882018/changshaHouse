@@ -1,7 +1,7 @@
 const sequelize = require('sequelize')
 const houseChildrenSchema = require('./../schema/houseChildren')
 const config = require('../config')
-const { mysqlDb } = require('../config/db')
+const mysqlDb = require('../db/mysql')
 const CommonApi = require('./common')
 
 class HouseChildrenModel extends CommonApi {

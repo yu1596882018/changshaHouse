@@ -1,15 +1,14 @@
 const { logUtil } = require('./../utils')
-const { esClient } = require('./../config/db')
 
 module.exports = {
   async reportMonitor(ctx, next) {
     const reqBody = ctx.request.body
     if (reqBody.category === 'performance') {
-      logUtil.webPerformance(ctx, esClient)
+      logUtil.webPerformance(ctx)
     } else if (reqBody.category === 'network_speed') {
-      logUtil.webNetworkSpeed(ctx, esClient)
+      logUtil.webNetworkSpeed(ctx)
     } else {
-      logUtil.webError(ctx, esClient)
+      logUtil.webError(ctx)
     }
     ctx.body = 'success'
   },

@@ -1,7 +1,9 @@
-const logUtil = require('./logUtil')
+const LogUtil = require('./logUtil')
+const logConfig = require('../config/logConfig')
+const esClient = require('../db/es')
 
 module.exports = {
-  logUtil,
+  logUtil: new LogUtil(logConfig, esClient),
   getIPAdress() {
     // 获取本机主机名和ip
     var interfaces = require('os').networkInterfaces()

@@ -1,10 +1,7 @@
 const log4js = require('log4js')
 const useragent = require('useragent')
 const uuidv1 = require('uuid/v1')
-const logConfig = require('../config/logConfig')
 const isProdu = process.env.NODE_ENV === 'production'
-
-log4js.configure(logConfig)
 
 const getUserIp = (req) => {
   return (
@@ -14,110 +11,6 @@ const getUserIp = (req) => {
     (req.connection && req.connection.socket.remoteAddress) ||
     req.ip
   )
-}
-
-const logUtil = {}
-const errorLogger = log4js.getLogger('errorLogger')
-const resLogger = log4js.getLogger('resLogger')
-const mysqlLogger = log4js.getLogger('mysqlLogger')
-const debugLogger = log4js.getLogger('DebugLogger')
-
-//封装错误日志
-logUtil.logError = function (ctx, error, resTime, esClient) {
-  if (ctx && error) {
-    const errLog = formatError(ctx, error, resTime)
-
-    esClient &&
-      esClient.create({
-        index: 'server_err_logs',
-        type: '_doc',
-        id: uuidv1(),
-        pipeline: 'geoip',
-        body: errLog.logObj,
-      })
-
-    errorLogger.error(errLog.logText)
-  }
-}
-
-//封装响应日志
-logUtil.logResponse = function (ctx, resTime, esClient) {
-  if (ctx) {
-    const resLog = formatRes(ctx, resTime)
-    resLogger.info(resLog.logText)
-
-    esClient &&
-      esClient.create({
-        index: 'server_res_logs',
-        type: '_doc',
-        id: uuidv1(),
-        pipeline: 'geoip',
-        body: resLog.logObj,
-      })
-  }
-}
-
-logUtil.logMysql = function (sql, ext_ts) {
-  if (!isProdu) {
-    console.log(sql)
-  }
-  mysqlLogger.info(sql + '\n', ext_ts, '\n')
-}
-
-logUtil.debugLog = function (text, file_name) {
-  if (!file_name) {
-    file_name = ''
-  }
-  debugLogger.info(`${file_name}: >>>>> ${text}`)
-}
-
-logUtil.webNetworkSpeed = function (ctx, esClient) {
-  const reqBody = ctx.request.body
-  const reportBody = {}
-  neatenWebReportBody(reqBody, reportBody, ctx.request)
-  reportBody.networkSpeed = reqBody.logInfo.networkSpeed
-  reportBody.pageId = reqBody.logInfo.pageId
-
-  esClient &&
-    esClient.create({
-      index: 'web_network_speed_logs',
-      type: '_doc',
-      id: uuidv1(),
-      pipeline: 'geoip',
-      body: reportBody,
-    })
-}
-
-logUtil.webError = function (ctx, esClient) {
-  const reqBody = ctx.request.body
-  const reportBody = {}
-  neatenWebReportBody(reqBody, reportBody, ctx.request)
-  reportBody.errorInfo = reqBody.logInfo
-
-  esClient &&
-    esClient.create({
-      index: 'web_err_logs',
-      type: '_doc',
-      id: uuidv1(),
-      pipeline: 'geoip',
-      body: reportBody,
-    })
-}
-
-logUtil.webPerformance = function (ctx, esClient) {
-  const reqBody = ctx.request.body
-  const reportBody = {}
-  neatenWebReportBody(reqBody, reportBody, ctx.request)
-  Object.assign(reportBody, reqBody.logInfo)
-
-  esClient &&
-    esClient.create({
-      index: 'web_performance_logs',
-      type: '_doc',
-      id: uuidv1(),
-      pipeline: 'geoip',
-      body: reportBody,
-    })
 }
 
 //格式化响应日志
@@ -254,4 +147,124 @@ function neatenWebReportBody(reqBody, reportBody, req) {
   reportBody.ip = getUserIp(req)
 }
 
-module.exports = logUtil
+class LogUtil {
+  constructor(logConfig, esClient) {
+    log4js.configure(logConfig)
+    this.errorLogger = log4js.getLogger('errorLogger')
+    this.resLogger = log4js.getLogger('resLogger')
+    this.mysqlLogger = log4js.getLogger('mysqlLogger')
+    this.debugLogger = log4js.getLogger('DebugLogger')
+    this.esClient = esClient
+  }
+
+  //封装错误日志
+  logError(ctx, error, resTime) {
+    if (ctx && error) {
+      const errLog = formatError(ctx, error, resTime)
+
+      this.esClient.create({
+        index: 'server_err_logs',
+        type: '_doc',
+        id: uuidv1(),
+        pipeline: 'geoip',
+        body: errLog.logObj,
+      })
+
+      this.errorLogger.error(errLog.logText)
+    }
+  }
+
+  // 封装响应日志
+  logResponse(ctx, resTime) {
+    if (ctx) {
+      const resLog = formatRes(ctx, resTime)
+      this.resLogger.info(resLog.logText)
+
+      this.esClient.create({
+        index: 'server_res_logs',
+        type: '_doc',
+        id: uuidv1(),
+        pipeline: 'geoip',
+        body: resLog.logObj,
+      })
+    }
+  }
+
+  // 封装响应日志
+  logResponse(ctx, resTime) {
+    if (ctx) {
+      const resLog = formatRes(ctx, resTime)
+      this.resLogger.info(resLog.logText)
+
+      this.esClient.create({
+        index: 'server_res_logs',
+        type: '_doc',
+        id: uuidv1(),
+        pipeline: 'geoip',
+        body: resLog.logObj,
+      })
+    }
+  }
+
+  logMysql(sql, ext_ts) {
+    if (!isProdu) {
+      console.log(sql)
+    }
+    this.mysqlLogger.info(sql + '\n', ext_ts, '\n')
+  }
+
+  debugLog(text, file_name) {
+    if (!file_name) {
+      file_name = ''
+    }
+    this.debugLogger.info(`${file_name}: >>>>> ${text}`)
+  }
+
+  webNetworkSpeed(ctx) {
+    const reqBody = ctx.request.body
+    const reportBody = {}
+    neatenWebReportBody(reqBody, reportBody, ctx.request)
+    reportBody.networkSpeed = reqBody.logInfo.networkSpeed
+    reportBody.pageId = reqBody.logInfo.pageId
+
+    this.esClient.create({
+      index: 'web_network_speed_logs',
+      type: '_doc',
+      id: uuidv1(),
+      pipeline: 'geoip',
+      body: reportBody,
+    })
+  }
+
+  webError(ctx) {
+    const reqBody = ctx.request.body
+    const reportBody = {}
+    neatenWebReportBody(reqBody, reportBody, ctx.request)
+    reportBody.errorInfo = reqBody.logInfo
+
+    this.esClient.create({
+      index: 'web_err_logs',
+      type: '_doc',
+      id: uuidv1(),
+      pipeline: 'geoip',
+      body: reportBody,
+    })
+  }
+
+  webPerformance(ctx) {
+    const reqBody = ctx.request.body
+    const reportBody = {}
+    neatenWebReportBody(reqBody, reportBody, ctx.request)
+    Object.assign(reportBody, reqBody.logInfo)
+
+    this.esClient.create({
+      index: 'web_performance_logs',
+      type: '_doc',
+      id: uuidv1(),
+      pipeline: 'geoip',
+      body: reportBody,
+    })
+  }
+}
+
+module.exports = LogUtil
