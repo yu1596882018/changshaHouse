@@ -7,6 +7,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.14.25.tgz#15967a7b577ff81383f9b888aa6705d43fbbae93"
   integrity sha512-EPpXLOVqDvisVxtlbvzfyqSsFeQxltFbluZNRndIb8tr9KiBnYNLzrc1N3pyKUCww2RNrfHDViqDWWE1LCJQtQ==
 
+"@yu1596882018/server-sdk@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@yu1596882018/server-sdk/-/server-sdk-1.0.3.tgz#0d2d4f39355283e7c5547fec98254ae0889fd3c1"
+  integrity sha512-RLTG1d/gsDgA7khSL6V8LfY6MTgpNskhPJogHlDYJghQ1PS3taFKzXzqH8y+aVDs437rrSd4bobThXrv/a82mg==
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"

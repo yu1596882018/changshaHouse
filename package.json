@@ -12,6 +12,7 @@
   "author": "yu1596882018 <1596882018@qq.com>",
   "license": "MIT",
   "dependencies": {
+    "@yu1596882018/server-sdk": "^1.0.3",
     "bcryptjs": "^2.4.3",
     "elasticsearch": "^16.5.0",
     "jsonwebtoken": "^8.5.1",

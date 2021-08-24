@@ -1,4 +1,4 @@
-const LogUtil = require('./logUtil')
+const LogUtil = require('@yu1596882018/server-sdk/utils/logUtil')
 const logConfig = require('../config/logConfig')
 const esClient = require('../db/es')
 
