@@ -34,9 +34,9 @@ App.use(responseFormatter)
 //绑定中间件
 App.use(logger())
   .use(cors())
-  .use(serve(path.join(__dirname, './static')), {
+  .use(serve(path.join(__dirname, './static'), {
     maxage: 10 * 60 * 1000,
-  })
+  }))
   .use(bodyparse())
 
 // 路由注册
