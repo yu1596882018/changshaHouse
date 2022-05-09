@@ -127,7 +127,9 @@ module.exports = function (sequelize, DataTypes) {
     {
       sequelize,
       tableName: 'house_info_list',
-      timestamps: false,
+      timestamps: true,
+      'updatedAt': 'updated_at',
+      'createdAt': 'created_at'
     },
   )
 }
