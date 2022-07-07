@@ -25,7 +25,7 @@ module.exports = {
   ],
 
   // 是否连接elasticsearch
-  connectES: true,
+  connectES: false,
   esConfig: {
     host: 'http://localhost:9200',
     apiVersion: '7.2',

@@ -1,4 +1,6 @@
 const elasticsearch = require('elasticsearch')
-const config = require('../config')
+const {esConfig, connectES} = require('../config')
 
-module.exports = new elasticsearch.Client(config.esConfig)
+module.exports = connectES ? new elasticsearch.Client(esConfig): {
+  create() {}
+}
