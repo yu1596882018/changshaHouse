@@ -12,7 +12,7 @@ module.exports = {
   mysqlConfig: [
     'changsha_house', // 数据库名
     'root', // 用户名
-    'xingyun2021.', // 密码
+    'XingYun2022', // 密码
     {
       host: 'localhost', // 数据库地址
       dialect: 'mysql', // 数据库类型
