@@ -12,9 +12,9 @@ module.exports = {
   /**
    * 获取验证码图片
    * @param {Object} ctx Koa上下文
-   * @param {Function} next 下一个中间件
+   * @param {Function} _next 下一个中间件
    */
-  getCodeImg: async(ctx, next) => {
+  getCodeImg: async(ctx, _next) => {
     try {
       ctx.set('Content-Type', 'image/png');
       ctx.set('Cache-Control', 'no-cache, no-store, must-revalidate');
@@ -54,14 +54,14 @@ module.exports = {
   /**
    * 验证预售证号
    * @param {Object} ctx Koa上下文
-   * @param {Function} next 下一个中间件
+   * @param {Function} _next 下一个中间件
    */
-  verifyCode: async(ctx, next) => {
+  verifyCode: async(ctx, _next) => {
     try {
-      const {yszh, verify_code} = ctx.request.body;
+      const {yszh, verifyCode} = ctx.request.body;
 
       // 参数验证
-      if (!yszh || !verify_code) {
+      if (!yszh || !verifyCode) {
         ctx.status = 400;
         ctx.body = {
           code: 400,
@@ -96,7 +96,7 @@ module.exports = {
           }&_token=${
             $('#form [name="_token"]').val()
           }&ismobile=0&xmmc=&verify_code=${
-            verify_code}`,
+            verifyCode}`,
         method: 'POST',
         mode: 'cors',
         json: true,
@@ -106,7 +106,8 @@ module.exports = {
 
       // 处理验证结果
       if (result.status === '1') {
-        const $result = cheerio.load(eval(`'${result.content}'`));
+        const content = result.content.replace(/\\'/g, '\'').replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+        const $result = cheerio.load(content);
         const $a = $result('a');
         const hrefValue = $a.attr('href');
         const iMatch = hrefValue && hrefValue.match(/\S+floorinfo\/(\w+)/);
@@ -133,9 +134,9 @@ module.exports = {
   /**
    * 收集房源信息
    * @param {Object} ctx Koa上下文
-   * @param {Function} next 下一个中间件
+   * @param {Function} _next 下一个中间件
    */
-  collectHouseInfo: async(ctx, next) => {
+  collectHouseInfo: async(ctx, _next) => {
     try {
       const {id} = ctx.query;
 
@@ -181,15 +182,15 @@ module.exports = {
   /**
    * 获取房源列表
    * @param {Object} ctx Koa上下文
-   * @param {Function} next 下一个中间件
+   * @param {Function} _next 下一个中间件
    */
-  getHouseList: async(ctx, next) => {
+  getHouseList: async(ctx, _next) => {
     try {
-      const {page = 1, limit = 20, keyword, area, status} = ctx.query;
+      const {page = 1, limit = 20} = ctx.query;
 
       // 参数验证
-      const pageNum = parseInt(page);
-      const limitNum = parseInt(limit);
+      const pageNum = parseInt(page, 10);
+      const limitNum = parseInt(limit, 10);
 
       if (pageNum < 1 || limitNum < 1 || limitNum > 100) {
         throw new APIError(APIError.Error400BadRequest, ctx, '分页参数不正确');
@@ -230,9 +231,9 @@ module.exports = {
   /**
    * 获取房源详情
    * @param {Object} ctx Koa上下文
-   * @param {Function} next 下一个中间件
+   * @param {Function} _next 下一个中间件
    */
-  getHouseDetail: async(ctx, next) => {
+  getHouseDetail: async(ctx, _next) => {
     try {
       const {id} = ctx.params;
 
