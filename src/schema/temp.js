@@ -1,3 +1,10 @@
+/**
+ * 临时信息表模型定义
+ * 用于存储临时token和用户信息
+ * @param {import('sequelize').Sequelize} sequelize Sequelize实例
+ * @param {import('sequelize').DataTypes} DataTypes 数据类型
+ * @returns {import('sequelize').Model}
+ */
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define(
     'temp',
@@ -7,6 +14,7 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+        comment: '主键ID',
       },
       a: {
         type: DataTypes.STRING(255),
@@ -28,6 +36,7 @@ module.exports = function(sequelize, DataTypes) {
       sequelize,
       tableName: 'temp',
       timestamps: false,
+      comment: '临时信息表',
     },
   )
 }

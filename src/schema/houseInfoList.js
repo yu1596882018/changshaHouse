@@ -1,3 +1,9 @@
+/**
+ * 楼盘项目信息表模型定义
+ * @param {import('sequelize').Sequelize} sequelize Sequelize实例
+ * @param {import('sequelize').DataTypes} DataTypes 数据类型
+ * @returns {import('sequelize').Model}
+ */
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
     'house_info_list',
@@ -7,11 +13,12 @@ module.exports = function (sequelize, DataTypes) {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+        comment: '主键ID',
       },
       a: {
         type: DataTypes.STRING(255),
         allowNull: true,
-        comment: '所属区域 ',
+        comment: '所属区域',
       },
       b: {
         type: DataTypes.STRING(255),
@@ -128,8 +135,9 @@ module.exports = function (sequelize, DataTypes) {
       sequelize,
       tableName: 'house_info_list',
       timestamps: true,
-      'updatedAt': 'updated_at',
-      'createdAt': 'created_at'
+      updatedAt: 'updated_at',
+      createdAt: 'created_at',
+      comment: '楼盘项目信息表',
     },
   )
 }

@@ -1,6 +1,11 @@
+/**
+ * 房屋子表信息数据爬取脚本
+ * 从住建局官网获取房屋子表详细信息
+ */
 const cheerio = require('cheerio')
 const rp = require('request-promise')
 
+// 定义属性名称数组
 const attrNames = ['a', 'b', 'c', 'd', 'f', 'g', 'h', 'i']
 
 module.exports = async (id, tableId) => {

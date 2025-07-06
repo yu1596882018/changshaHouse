@@ -1,13 +1,22 @@
+/**
+ * 户室信息表模型定义
+ * 动态表名，适用于分表场景
+ * @param {import('sequelize').Sequelize} sequelize Sequelize实例
+ * @param {import('sequelize').DataTypes} DataTypes 数据类型
+ * @param {Object} extendOptions 扩展选项，需包含tableId
+ * @returns {import('sequelize').Model}
+ */
 module.exports = function (sequelize, DataTypes, extendOptions = {}) {
   const { tableId } = extendOptions
   return sequelize.define(
-    'house_children_info_' + tableId,
+    `house_children_info_${tableId}`,
     {
       id: {
         type: DataTypes.INTEGER(11),
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
+        comment: '主键ID',
       },
       a: {
         type: DataTypes.STRING(255),
@@ -57,8 +66,9 @@ module.exports = function (sequelize, DataTypes, extendOptions = {}) {
     },
     {
       sequelize,
-      tableName: 'house_children_info_' + tableId,
+      tableName: `house_children_info_${tableId}`,
       timestamps: false,
+      comment: '户室信息分表',
     },
   )
 }

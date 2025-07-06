@@ -1,27 +1,94 @@
+/**
+ * 房屋子表控制器
+ * 提供房屋子表数据的增删改查操作
+ */
 const houseChildrenModel = require('../models/houseChildren')
 const commonExt = require('./commonExt')
 
+// 定义属性名称数组
 const attrNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']
 
 module.exports = {
   ...commonExt(houseChildrenModel, attrNames, { modelIsMethod: true }),
 
+  /**
+   * 批量创建记录
+   * @param {Object} ctx Koa上下文
+   * @param {Function} next 下一个中间件
+   */
   async bulkCreate(ctx, next) {
-    let result = await (await houseChildrenModel(ctx.params.tableId)).bulkCreate(ctx.request.body.data || [])
+    try {
+      const { data } = ctx.request.body
+      
+      // 验证输入数据
+      if (!data || !Array.isArray(data) || data.length === 0) {
+        ctx.status = 400
+        ctx.body = {
+          code: 400,
+          message: '缺少有效的批量数据',
+        }
+        return
+      }
 
-    ctx.body = result
-    await next()
+      // 验证数据条数限制
+      if (data.length > 100) {
+        ctx.status = 400
+        ctx.body = {
+          code: 400,
+          message: '批量创建数据不能超过100条',
+        }
+        return
+      }
+
+      const model = await houseChildrenModel(ctx.params.tableId)
+      const result = await model.bulkCreate(data)
+
+      ctx.body = {
+        code: 200,
+        message: '批量创建成功',
+        data: {
+          count: result.length,
+          records: result,
+        },
+      }
+    } catch (error) {
+      console.error('批量创建记录失败:', error.message)
+      ctx.status = 500
+      ctx.body = {
+        code: 500,
+        message: '批量创建记录失败',
+        error: error.message,
+      }
+    }
   },
 
+  /**
+   * 清空所有记录
+   * @param {Object} ctx Koa上下文
+   * @param {Function} next 下一个中间件
+   */
   async destroyAll(ctx, next) {
-    await (await houseChildrenModel(ctx.params.tableId)).destroy(
-      {},
-      {
+    try {
+      const model = await houseChildrenModel(ctx.params.tableId)
+      
+      // 使用truncate清空表
+      await model.destroy({
+        where: {},
         truncate: true,
-      },
-    )
+      })
 
-    ctx.body = 'success'
-    await next()
+      ctx.body = {
+        code: 200,
+        message: '清空所有记录成功',
+      }
+    } catch (error) {
+      console.error('清空所有记录失败:', error.message)
+      ctx.status = 500
+      ctx.body = {
+        code: 500,
+        message: '清空所有记录失败',
+        error: error.message,
+      }
+    }
   },
 }

@@ -1,4 +1,14 @@
+/**
+ * 初始化Elasticsearch索引脚本
+ * 用于创建日志相关的ES索引和示例文档
+ * @author 长沙房屋查询平台
+ * @version 2.0.0
+ */
 const esClient = require('./../db/es')
+
+/**
+ * 创建server_res_logs索引示例文档
+ */
 esClient.create({
   "index": "server_res_logs",
   "type": "_doc",
@@ -19,6 +29,10 @@ esClient.create({
     "responseStatus": 204
   }
 })
+
+/**
+ * 创建web_network_speed_logs索引示例文档
+ */
 esClient.create({
   "index": "web_network_speed_logs",
   "type": "_doc",
@@ -46,6 +60,10 @@ esClient.create({
     "pageId": "changshaHouseMoblie"
   }
 })
+
+/**
+ * 创建web_performance_logs索引示例文档
+ */
 esClient.create({
   "index": "web_performance_logs",
   "type": "_doc",
@@ -100,6 +118,10 @@ esClient.create({
     "pageId": "changshaHouseMoblie"
   }
 })
+
+/**
+ * 创建web_err_logs索引示例文档
+ */
 esClient.create({
   "index": "web_err_logs",
   "type": "_doc",
@@ -126,6 +148,10 @@ esClient.create({
     "errorInfo": "错误类别: js_error\r\n日志信息: Uncaught ReferenceError: aaa is not defined\r\nurl: \r\n错误行号: 1\r\n错误列号: 1\r\n错误栈: ReferenceError: aaa is not defined\n    at <anonymous>:1:1\r\n"
   }
 })
+
+/**
+ * 创建server_err_logs索引示例文档
+ */
 esClient.create({
   "index": "server_err_logs",
   "type": "_doc",

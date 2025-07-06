@@ -1,51 +1,89 @@
 {
-  "name": "node-koa-template",
-  "version": "1.0.0",
-  "description": "搭建一个可复用、以koa为主的服务端开发环境",
+  "name": "changsha-house-api",
+  "version": "2.0.0",
+  "description": "长沙楼市查询平台后端API服务 - 基于Koa2的现代化Node.js应用",
   "main": "src/main.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development PORT=8899 nodemon ./src/main",
+    "start": "cross-env NODE_ENV=production node ./src/main",
     "prod": "pm2 start ./pm2.json",
-    "prettier": "prettier --ignore-path .gitignore --write ."
+    "build": "npm run lint",
+    "lint": "eslint src/ --ext .js,.ts --fix",
+    "lint:check": "eslint src/ --ext .js,.ts",
+    "format": "prettier --write \"src/**/*.{js,ts,json,md}\"",
+    "format:check": "prettier --check \"src/**/*.{js,ts,json,md}\"",
+    "clean": "rimraf dist"
   },
-  "repository": "git@github.com:yu1596882018/node-koa-template.git",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:yu1596882018/changshaHouse.git"
+  },
+  "keywords": [
+    "koa",
+    "nodejs",
+    "real-estate",
+    "api",
+    "mysql",
+    "redis",
+    "elasticsearch",
+    "crawler"
+  ],
   "author": "yu1596882018 <1596882018@qq.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
   "dependencies": {
     "@yu1596882018/server-sdk": "^1.0.3",
     "bcryptjs": "^2.4.3",
     "elasticsearch": "^16.5.0",
     "jsonwebtoken": "^8.5.1",
-    "koa": "^2.7.0",
-    "koa-bodyparser": "^4.2.1",
-    "koa-logger": "^3.2.0",
+    "koa": "^2.14.2",
+    "koa-bodyparser": "^4.4.1",
+    "koa-logger": "^3.2.1",
     "koa-multer": "^1.0.2",
-    "koa-router": "^7.4.0",
+    "koa-router": "^12.0.0",
     "koa-sslify": "^4.0.3",
     "koa-static": "^5.0.0",
     "koa2-cors": "^2.0.6",
-    "log4js": "^4.3.1",
-    "moment": "^2.24.0",
-    "mysql2": "^1.6.4",
-    "prettier": "^2.2.1",
-    "redis": "^2.8.0",
+    "log4js": "^6.9.1",
+    "moment": "^2.29.4",
+    "mysql2": "^3.6.5",
+    "redis": "^4.6.10",
     "request-promise": "^4.2.6",
-    "sequelize": "^5.21.2",
+    "sequelize": "^6.35.1",
     "useragent": "^2.3.0",
-    "uuid": "^3.3.3"
+    "uuid": "^9.0.1",
+    "helmet": "^7.1.0",
+    "koa-compress": "^5.1.1",
+    "koa-ratelimit": "^5.0.1",
+    "joi": "^17.11.0",
+    "dotenv": "^16.3.1",
+    "winston": "^3.11.0",
+    "express-rate-limit": "^7.1.5",
+    "compression": "^1.7.4"
   },
   "devDependencies": {
-    "cheerio": "^1.0.0-rc.3",
-    "cross-env": "^5.2.0",
+    "cheerio": "^1.0.0-rc.12",
+    "cross-env": "^7.0.3",
     "koa-json": "^2.0.2",
-    "nodemon": "^1.19.1",
-    "request": "^2.88.2"
+    "nodemon": "^3.0.2",
+    "request": "^2.88.2",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "prettier": "^3.1.1",
+    "rimraf": "^5.0.5",
+    "@types/node": "^20.10.5",
+    "typescript": "^5.3.3"
   },
   "nodemonConfig": {
     "ignore": [
       "scripts/*",
       "data/*"
     ],
-    "delay": "2500"
+    "delay": "2500",
+    "ext": "js,ts,json"
   }
 }
