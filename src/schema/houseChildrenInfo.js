@@ -6,8 +6,8 @@
  * @param {Object} extendOptions 扩展选项，需包含tableId
  * @returns {import('sequelize').Model}
  */
-module.exports = function (sequelize, DataTypes, extendOptions = {}) {
-  const { tableId } = extendOptions
+module.exports = function(sequelize, DataTypes, extendOptions = {}) {
+  const {tableId} = extendOptions;
   return sequelize.define(
     `house_children_info_${tableId}`,
     {
@@ -70,5 +70,5 @@ module.exports = function (sequelize, DataTypes, extendOptions = {}) {
       timestamps: false,
       comment: '户室信息分表',
     },
-  )
-}
+  );
+};

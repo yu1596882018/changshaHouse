@@ -4,13 +4,13 @@
  * @author 长沙房屋查询平台
  * @version 2.0.0
  */
-const path = require('path')
+const path = require('path');
 
 /**
  * 日志根目录
  * @type {string}
  */
-const baseLogPath = path.resolve(__dirname, '../../logs')
+const baseLogPath = path.resolve(__dirname, '../../logs');
 
 /**
  * 日志配置对象
@@ -70,18 +70,18 @@ module.exports = {
     /**
      * 错误日志类别
      */
-    errorLogger: { appenders: ['errorLogger'], level: 'error' },
+    errorLogger: {appenders: ['errorLogger'], level: 'error'},
     /**
      * 响应日志类别
      */
-    resLogger: { appenders: ['resLogger'], level: 'info' },
+    resLogger: {appenders: ['resLogger'], level: 'info'},
     /**
      * MySQL日志类别
      */
-    mysqlLogger: { appenders: ['mysqlLogger'], level: 'info' },
+    mysqlLogger: {appenders: ['mysqlLogger'], level: 'info'},
     /**
      * 默认调试日志类别
      */
-    default: { appenders: ['DebugLogger'], level: 'all' },
+    default: {appenders: ['DebugLogger'], level: 'all'},
   },
-}
+};

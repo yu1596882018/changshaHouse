@@ -2,8 +2,8 @@
  * 房屋信息列表数据爬取脚本
  * 从住建局官网获取房屋基本信息
  */
-const cheerio = require('cheerio')
-const rp = require('request-promise')
+const cheerio = require('cheerio');
+const rp = require('request-promise');
 
 // 定义属性名称数组
 const attrNames = [
@@ -28,10 +28,10 @@ const attrNames = [
   's',
   't',
   'u',
-]
-const leftCol = attrNames.slice(0, 10)
-const rightCol = attrNames.slice(10, attrNames.length - 1)
-const lastCol = attrNames.slice(attrNames.length - 1)
+];
+const leftCol = attrNames.slice(0, 10);
+const rightCol = attrNames.slice(10, attrNames.length - 1);
+const lastCol = attrNames.slice(attrNames.length - 1);
 // console.log(leftCol, rightCol, lastCol)
 
 /**
@@ -39,18 +39,18 @@ const lastCol = attrNames.slice(attrNames.length - 1)
  * @param {string} id 房屋ID
  * @returns {Promise<Object>} 房屋信息数据
  */
-module.exports = async (id) => {
+module.exports = async id => {
   try {
     // 验证参数
     if (!id) {
-      throw new Error('房屋ID不能为空')
+      throw new Error('房屋ID不能为空');
     }
 
     const data = {
       v: id,
-    }
+    };
 
-    const baseUrl = 'http://222.240.149.21:8081'
+    const baseUrl = 'http://222.240.149.21:8081';
 
     // 请求房屋详情页面
     const res = await rp(`${baseUrl}/floorinfo/${id}`, {
@@ -69,14 +69,14 @@ module.exports = async (id) => {
       method: 'GET',
       mode: 'cors',
       timeout: 10000, // 10秒超时
-    })
+    });
 
     // 解析HTML内容
-    const $ = cheerio.load(res)
-    const $trs = $('.hs_xqxx table tr')
+    const $ = cheerio.load(res);
+    const $trs = $('.hs_xqxx table tr');
 
     // 提取标题
-    data.w = $trs.eq(0).children('th').text().trim()
+    data.w = $trs.eq(0).children('th').text().trim();
 
     // 提取左列数据
     leftCol.forEach((item, index) => {
@@ -85,8 +85,8 @@ module.exports = async (id) => {
         .children('td')
         .eq(1)
         .text()
-        .trim()
-    })
+        .trim();
+    });
 
     // 提取右列数据
     rightCol.forEach((item, index) => {
@@ -95,8 +95,8 @@ module.exports = async (id) => {
         .children('td')
         .eq(3)
         .text()
-        .trim()
-    })
+        .trim();
+    });
 
     // 提取最后一列数据
     data[lastCol[0]] = $trs
@@ -104,13 +104,13 @@ module.exports = async (id) => {
       .children('td')
       .eq(1)
       .text()
-      .trim()
+      .trim();
 
     // 检查是否已存在数据
     const oldData = await rp(`http://localhost:8899/houseInfoList?v=${id}`, {
       json: true,
       timeout: 5000,
-    })
+    });
 
     if (oldData.count > 0) {
       // 更新现有数据
@@ -124,9 +124,9 @@ module.exports = async (id) => {
         body: data,
         json: true,
         timeout: 5000,
-      })
+      });
 
-      console.log(`成功更新房屋 ${id} 的信息`)
+      console.log(`成功更新房屋 ${id} 的信息`);
     } else {
       // 创建新数据
       const result = await rp({
@@ -139,14 +139,14 @@ module.exports = async (id) => {
         body: data,
         json: true,
         timeout: 5000,
-      })
+      });
 
-      console.log(`成功创建房屋 ${id} 的信息`)
+      console.log(`成功创建房屋 ${id} 的信息`);
     }
 
-    return data
+    return data;
   } catch (error) {
-    console.error(`爬取房屋 ${id} 信息失败:`, error.message)
-    throw error
+    console.error(`爬取房屋 ${id} 信息失败:`, error.message);
+    throw error;
   }
-}
+};

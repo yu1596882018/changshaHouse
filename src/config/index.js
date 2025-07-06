@@ -82,7 +82,9 @@ module.exports = {
   crawler: {
     delay: parseInt(process.env.CRAWLER_DELAY) || 1000,
     timeout: parseInt(process.env.CRAWLER_TIMEOUT) || 30000,
-    userAgent: process.env.CRAWLER_USER_AGENT || 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+    userAgent:
+      process.env.CRAWLER_USER_AGENT ||
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
     retries: 3,
   },
 

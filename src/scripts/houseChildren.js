@@ -2,26 +2,26 @@
  * 房屋子表数据爬取脚本
  * 从住建局官网获取房屋子表数据
  */
-const cheerio = require('cheerio')
-const rp = require('request-promise')
+const cheerio = require('cheerio');
+const rp = require('request-promise');
 
 // 定义属性名称数组
-const attrNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+const attrNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 
 /**
  * 爬取房屋子表数据
  * @param {string} id 房屋ID
  * @returns {Promise<Array>} 房屋子表数据数组
  */
-module.exports = async (id) => {
+module.exports = async id => {
   try {
     // 验证参数
     if (!id) {
-      throw new Error('房屋ID不能为空')
+      throw new Error('房屋ID不能为空');
     }
 
-    const datas = []
-    const baseUrl = 'http://222.240.149.21:8081'
+    const datas = [];
+    const baseUrl = 'http://222.240.149.21:8081';
 
     // 请求房屋详情页面
     const res = await rp(`${baseUrl}/floorinfo/${id}`, {
@@ -40,38 +40,39 @@ module.exports = async (id) => {
       method: 'GET',
       mode: 'cors',
       timeout: 10000, // 10秒超时
-    })
+    });
 
     // 解析HTML内容
-    const $ = cheerio.load(res)
-    const $trs = $('.hs_table > table > tbody > tr:not(.hs_table1)')
+    const $ = cheerio.load(res);
+    const $trs = $('.hs_table > table > tbody > tr:not(.hs_table1)');
 
     // 提取表格数据
     $trs.each((index, element) => {
-      if (index !== 0) { // 跳过表头行
-        const $tds = $(element).children('td')
-        const onclickValue = $(element).children('td.hs_zk').attr('onclick')
-        const iMatch = onclickValue && onclickValue.match(/javascript:hsjajx\('(\w+)',\d+\)/)
+      if (index !== 0) {
+        // 跳过表头行
+        const $tds = $(element).children('td');
+        const onclickValue = $(element).children('td.hs_zk').attr('onclick');
+        const iMatch = onclickValue && onclickValue.match(/javascript:hsjajx\('(\w+)',\d+\)/);
 
         const data = {
           i: iMatch ? iMatch[1] : null,
-        }
+        };
 
         // 提取每个属性值
         attrNames.forEach((item, index) => {
-          data[item] = $tds.eq(index).text().trim()
-        })
+          data[item] = $tds.eq(index).text().trim();
+        });
 
-        datas.push(data)
+        datas.push(data);
       }
-    })
+    });
 
     // 清空现有数据
     await rp({
       method: 'DELETE',
       url: `http://localhost:8899/houseChildren/${id}`,
       timeout: 5000,
-    })
+    });
 
     // 批量创建新数据
     const result = await rp({
@@ -86,13 +87,12 @@ module.exports = async (id) => {
       },
       json: true,
       timeout: 10000,
-    })
+    });
 
-    console.log(`成功爬取房屋 ${id} 的子表数据，共 ${datas.length} 条记录`)
-    return datas
+    console.log(`成功爬取房屋 ${id} 的子表数据，共 ${datas.length} 条记录`);
+    return datas;
   } catch (error) {
-    console.error(`爬取房屋 ${id} 子表数据失败:`, error.message)
-    throw error
+    console.error(`爬取房屋 ${id} 子表数据失败:`, error.message);
+    throw error;
   }
-}
-
+};

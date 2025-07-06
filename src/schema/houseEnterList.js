@@ -4,7 +4,7 @@
  * @param {import('sequelize').DataTypes} DataTypes 数据类型
  * @returns {import('sequelize').Model}
  */
-module.exports = function (sequelize, DataTypes) {
+module.exports = function(sequelize, DataTypes) {
   return sequelize.define(
     'house_enter_list',
     {
@@ -47,5 +47,5 @@ module.exports = function (sequelize, DataTypes) {
       timestamps: false,
       comment: '入住项目信息表',
     },
-  )
-}
+  );
+};

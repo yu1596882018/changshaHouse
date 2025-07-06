@@ -2,14 +2,14 @@
  * 房屋子表控制器
  * 提供房屋子表数据的增删改查操作
  */
-const houseChildrenModel = require('../models/houseChildren')
-const commonExt = require('./commonExt')
+const houseChildrenModel = require('../models/houseChildren');
+const commonExt = require('./commonExt');
 
 // 定义属性名称数组
-const attrNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l']
+const attrNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'];
 
 module.exports = {
-  ...commonExt(houseChildrenModel, attrNames, { modelIsMethod: true }),
+  ...commonExt(houseChildrenModel, attrNames, {modelIsMethod: true}),
 
   /**
    * 批量创建记录
@@ -18,30 +18,30 @@ module.exports = {
    */
   async bulkCreate(ctx, next) {
     try {
-      const { data } = ctx.request.body
-      
+      const {data} = ctx.request.body;
+
       // 验证输入数据
       if (!data || !Array.isArray(data) || data.length === 0) {
-        ctx.status = 400
+        ctx.status = 400;
         ctx.body = {
           code: 400,
           message: '缺少有效的批量数据',
-        }
-        return
+        };
+        return;
       }
 
       // 验证数据条数限制
       if (data.length > 100) {
-        ctx.status = 400
+        ctx.status = 400;
         ctx.body = {
           code: 400,
           message: '批量创建数据不能超过100条',
-        }
-        return
+        };
+        return;
       }
 
-      const model = await houseChildrenModel(ctx.params.tableId)
-      const result = await model.bulkCreate(data)
+      const model = await houseChildrenModel(ctx.params.tableId);
+      const result = await model.bulkCreate(data);
 
       ctx.body = {
         code: 200,
@@ -50,15 +50,15 @@ module.exports = {
           count: result.length,
           records: result,
         },
-      }
+      };
     } catch (error) {
-      console.error('批量创建记录失败:', error.message)
-      ctx.status = 500
+      console.error('批量创建记录失败:', error.message);
+      ctx.status = 500;
       ctx.body = {
         code: 500,
         message: '批量创建记录失败',
         error: error.message,
-      }
+      };
     }
   },
 
@@ -69,26 +69,26 @@ module.exports = {
    */
   async destroyAll(ctx, next) {
     try {
-      const model = await houseChildrenModel(ctx.params.tableId)
-      
+      const model = await houseChildrenModel(ctx.params.tableId);
+
       // 使用truncate清空表
       await model.destroy({
         where: {},
         truncate: true,
-      })
+      });
 
       ctx.body = {
         code: 200,
         message: '清空所有记录成功',
-      }
+      };
     } catch (error) {
-      console.error('清空所有记录失败:', error.message)
-      ctx.status = 500
+      console.error('清空所有记录失败:', error.message);
+      ctx.status = 500;
       ctx.body = {
         code: 500,
         message: '清空所有记录失败',
         error: error.message,
-      }
+      };
     }
   },
-}
+};

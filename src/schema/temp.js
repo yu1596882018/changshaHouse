@@ -38,5 +38,5 @@ module.exports = function(sequelize, DataTypes) {
       timestamps: false,
       comment: '临时信息表',
     },
-  )
-}
+  );
+};

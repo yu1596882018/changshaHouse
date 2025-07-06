@@ -14,14 +14,14 @@ module.exports = {
    * @param {Object} ctx Koa上下文
    * @param {Function} next 下一个中间件
    */
-  getCodeImg: async (ctx, next) => {
+  getCodeImg: async(ctx, next) => {
     try {
       ctx.set('Content-Type', 'image/png');
       ctx.set('Cache-Control', 'no-cache, no-store, must-revalidate');
       ctx.set('Pragma', 'no-cache');
       ctx.set('Expires', '0');
-      
-      const imgRes = await rp('http://www.cszjxx.net/newCaptcha?r=' + Math.random(), {
+
+      const imgRes = await rp(`http://www.cszjxx.net/newCaptcha?r=${Math.random()}`, {
         headers: {
           accept: 'image/avif,image/webp,image/apng,image/*,*/*;q=0.8',
           'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8',
@@ -56,9 +56,9 @@ module.exports = {
    * @param {Object} ctx Koa上下文
    * @param {Function} next 下一个中间件
    */
-  verifyCode: async (ctx, next) => {
+  verifyCode: async(ctx, next) => {
     try {
-      const { yszh, verify_code } = ctx.request.body;
+      const {yszh, verify_code} = ctx.request.body;
 
       // 参数验证
       if (!yszh || !verify_code) {
@@ -91,12 +91,12 @@ module.exports = {
         referrer: 'http://www.cszjxx.net/preselllicence',
         referrerPolicy: 'strict-origin-when-cross-origin',
         body:
-          'area=cs&yszh=' +
-          yszh +
-          '&_token=' +
-          $('#form [name="_token"]').val() +
-          '&ismobile=0&xmmc=&verify_code=' +
-          verify_code,
+          `area=cs&yszh=${
+            yszh
+          }&_token=${
+            $('#form [name="_token"]').val()
+          }&ismobile=0&xmmc=&verify_code=${
+            verify_code}`,
         method: 'POST',
         mode: 'cors',
         json: true,
@@ -106,7 +106,7 @@ module.exports = {
 
       // 处理验证结果
       if (result.status === '1') {
-        const $result = cheerio.load(eval("'" + result.content + "'"));
+        const $result = cheerio.load(eval(`'${result.content}'`));
         const $a = $result('a');
         const hrefValue = $a.attr('href');
         const iMatch = hrefValue && hrefValue.match(/\S+floorinfo\/(\w+)/);
@@ -135,9 +135,9 @@ module.exports = {
    * @param {Object} ctx Koa上下文
    * @param {Function} next 下一个中间件
    */
-  collectHouseInfo: async (ctx, next) => {
+  collectHouseInfo: async(ctx, next) => {
     try {
-      const { id } = ctx.query;
+      const {id} = ctx.query;
 
       if (!id) {
         ctx.status = 400;
@@ -149,7 +149,7 @@ module.exports = {
       }
 
       // 异步执行爬虫任务，避免阻塞响应
-      setImmediate(async () => {
+      setImmediate(async() => {
         try {
           await houseMain(id);
           console.log(`✅ 房源 ${id} 信息收集完成`);
@@ -183,9 +183,9 @@ module.exports = {
    * @param {Object} ctx Koa上下文
    * @param {Function} next 下一个中间件
    */
-  getHouseList: async (ctx, next) => {
+  getHouseList: async(ctx, next) => {
     try {
-      const { page = 1, limit = 20, keyword, area, status } = ctx.query;
+      const {page = 1, limit = 20, keyword, area, status} = ctx.query;
 
       // 参数验证
       const pageNum = parseInt(page);
@@ -221,7 +221,7 @@ module.exports = {
       if (error instanceof APIError) {
         throw error;
       }
-      
+
       console.error('获取房源列表失败:', error);
       throw new APIError(APIError.Error511SomeError, ctx, '获取房源列表失败');
     }
@@ -232,9 +232,9 @@ module.exports = {
    * @param {Object} ctx Koa上下文
    * @param {Function} next 下一个中间件
    */
-  getHouseDetail: async (ctx, next) => {
+  getHouseDetail: async(ctx, next) => {
     try {
-      const { id } = ctx.params;
+      const {id} = ctx.params;
 
       if (!id) {
         throw new APIError(APIError.Error400BadRequest, ctx, '房源ID不能为空');
@@ -268,7 +268,7 @@ module.exports = {
       if (error instanceof APIError) {
         throw error;
       }
-      
+
       console.error('获取房源详情失败:', error);
       throw new APIError(APIError.Error511SomeError, ctx, '获取房源详情失败');
     }

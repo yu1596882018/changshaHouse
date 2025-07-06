@@ -1,4 +1,4 @@
-const { logUtil } = require('../utils');
+const {logUtil} = require('../utils');
 
 /**
  * 监控报告控制器
@@ -13,7 +13,7 @@ module.exports = {
   async reportMonitor(ctx, next) {
     try {
       const reqBody = ctx.request.body;
-      
+
       // 验证请求体
       if (!reqBody || !reqBody.category) {
         ctx.status = 400;
@@ -26,18 +26,18 @@ module.exports = {
 
       // 根据监控类别处理不同类型的监控数据
       switch (reqBody.category) {
-        case 'performance':
-          logUtil.webPerformance(ctx);
-          break;
-        case 'network_speed':
-          logUtil.webNetworkSpeed(ctx);
-          break;
-        case 'error':
-          logUtil.webError(ctx);
-          break;
-        default:
-          logUtil.webError(ctx);
-          break;
+      case 'performance':
+        logUtil.webPerformance(ctx);
+        break;
+      case 'network_speed':
+        logUtil.webNetworkSpeed(ctx);
+        break;
+      case 'error':
+        logUtil.webError(ctx);
+        break;
+      default:
+        logUtil.webError(ctx);
+        break;
       }
 
       ctx.body = {

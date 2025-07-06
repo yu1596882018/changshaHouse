@@ -6,10 +6,10 @@
  * @param {Object} extendOptions 扩展选项
  * @returns {Object} Sequelize模型
  */
-module.exports = function (sequelize, DataTypes, extendOptions = {}) {
-  const { tableId } = extendOptions
+module.exports = function(sequelize, DataTypes, extendOptions = {}) {
+  const {tableId} = extendOptions;
   return sequelize.define(
-    'house_children_' + tableId,
+    `house_children_${tableId}`,
     {
       // 主键ID
       id: {
@@ -94,9 +94,9 @@ module.exports = function (sequelize, DataTypes, extendOptions = {}) {
     },
     {
       sequelize,
-      tableName: 'house_children_' + tableId,
+      tableName: `house_children_${tableId}`,
       timestamps: false,
       comment: '房屋子表',
     },
-  )
-}
+  );
+};

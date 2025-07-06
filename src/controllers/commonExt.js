@@ -7,7 +7,7 @@
  * @returns {Object} 包含CRUD方法的对象
  */
 module.exports = function(exampleModel, attrNames = [], options = {}) {
-  const { modelIsMethod } = options;
+  const {modelIsMethod} = options;
 
   return {
     /**
@@ -20,7 +20,7 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
         const options = {};
 
         // 从请求体中提取属性值
-        attrNames.forEach((attrName) => {
+        attrNames.forEach(attrName => {
           const val = ctx.request.body[attrName];
           if (val !== undefined && val !== null && val !== '') {
             options[attrName] = val;
@@ -38,7 +38,7 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
           return;
         }
 
-        const model = modelIsMethod ? (await exampleModel(ctx.params.tableId)) : exampleModel;
+        const model = modelIsMethod ? await exampleModel(ctx.params.tableId) : exampleModel;
         const result = await model.create(options);
 
         ctx.body = {
@@ -64,8 +64,8 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
      */
     async deleteCont(ctx, next) {
       try {
-        const { id } = ctx.params;
-        
+        const {id} = ctx.params;
+
         if (!id) {
           ctx.status = 400;
           ctx.body = {
@@ -75,9 +75,9 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
           return;
         }
 
-        const model = modelIsMethod ? (await exampleModel(ctx.params.tableId)) : exampleModel;
+        const model = modelIsMethod ? await exampleModel(ctx.params.tableId) : exampleModel;
         await model.destroy({
-          where: { id },
+          where: {id},
         });
 
         ctx.body = {
@@ -102,8 +102,8 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
      */
     async updateCont(ctx, next) {
       try {
-        const { id } = ctx.params;
-        
+        const {id} = ctx.params;
+
         if (!id) {
           ctx.status = 400;
           ctx.body = {
@@ -116,16 +116,16 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
         const options = {};
 
         // 从请求体中提取属性值
-        attrNames.forEach((attrName) => {
+        attrNames.forEach(attrName => {
           const val = ctx.request.body[attrName];
           if (val !== undefined) {
             options[attrName] = val;
           }
         });
 
-        const model = modelIsMethod ? (await exampleModel(ctx.params.tableId)) : exampleModel;
+        const model = modelIsMethod ? await exampleModel(ctx.params.tableId) : exampleModel;
         await model.update(options, {
-          where: { id },
+          where: {id},
         });
 
         ctx.body = {
@@ -150,8 +150,8 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
      */
     async patchCont(ctx, next) {
       try {
-        const { id } = ctx.params;
-        
+        const {id} = ctx.params;
+
         if (!id) {
           ctx.status = 400;
           ctx.body = {
@@ -164,16 +164,16 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
         const options = {};
 
         // 只更新提供的字段
-        attrNames.forEach((attrName) => {
+        attrNames.forEach(attrName => {
           const val = ctx.request.body[attrName];
           if (val !== undefined && val !== null && val !== '') {
             options[attrName] = val;
           }
         });
 
-        const model = modelIsMethod ? (await exampleModel(ctx.params.tableId)) : exampleModel;
+        const model = modelIsMethod ? await exampleModel(ctx.params.tableId) : exampleModel;
         await model.update(options, {
-          where: { id },
+          where: {id},
         });
 
         ctx.body = {
@@ -198,8 +198,8 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
      */
     async queryOneCont(ctx, next) {
       try {
-        const { id } = ctx.params;
-        
+        const {id} = ctx.params;
+
         if (!id) {
           ctx.status = 400;
           ctx.body = {
@@ -209,9 +209,9 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
           return;
         }
 
-        const model = modelIsMethod ? (await exampleModel(ctx.params.tableId)) : exampleModel;
+        const model = modelIsMethod ? await exampleModel(ctx.params.tableId) : exampleModel;
         const result = await model.findOne({
-          where: { id },
+          where: {id},
         });
 
         if (!result) {
@@ -246,10 +246,10 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
      */
     async queryAllCont(ctx, next) {
       try {
-        const options = { where: {} };
+        const options = {where: {}};
 
         // 从查询参数中提取过滤条件
-        attrNames.forEach((attrName) => {
+        attrNames.forEach(attrName => {
           const val = ctx.query[attrName];
           if (val !== undefined && val !== null && val !== '') {
             options.where[attrName] = val;
@@ -269,7 +269,7 @@ module.exports = function(exampleModel, attrNames = [], options = {}) {
           return;
         }
 
-        const model = modelIsMethod ? (await exampleModel(ctx.params.tableId)) : exampleModel;
+        const model = modelIsMethod ? await exampleModel(ctx.params.tableId) : exampleModel;
         const result = await model.findAndCountAll({
           ...options,
           offset,

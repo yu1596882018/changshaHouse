@@ -6,14 +6,14 @@
  */
 const APIError = require('./apiError');
 const config = require('../config');
-const { logUtil } = require('../utils');
+const {logUtil} = require('../utils');
 
 /**
  * 错误处理中间件
  * @param {Object} ctx Koa上下文
  * @param {Function} next 下一个中间件
  */
-module.exports = async (ctx, next) => {
+module.exports = async(ctx, next) => {
   try {
     await next();
   } catch (error) {
@@ -28,9 +28,9 @@ module.exports = async (ctx, next) => {
       timestamp: new Date().toISOString(),
       requestId: ctx.headers['x-request-id'] || 'unknown',
     };
-    
+
     console.error('❌ 错误详情:', errorInfo);
-    
+
     // 记录到日志文件
     logUtil.logError(ctx, error, 0);
 
@@ -234,4 +234,4 @@ module.exports = async (ctx, next) => {
       requestId: errorInfo.requestId,
     };
   }
-}; 
+};

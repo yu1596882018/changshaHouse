@@ -2,8 +2,8 @@
  * 房屋信息列表控制器
  * 提供房屋信息列表数据的增删改查操作
  */
-const houseInfoListModel = require('../models/houseInfoList')
-const commonExt = require('./commonExt')
+const houseInfoListModel = require('../models/houseInfoList');
+const commonExt = require('./commonExt');
 
 // 定义属性名称数组
 const attrNames = [
@@ -30,8 +30,8 @@ const attrNames = [
   'u',
   'v',
   'w',
-]
+];
 
 module.exports = {
   ...commonExt(houseInfoListModel, attrNames),
-}
+};
